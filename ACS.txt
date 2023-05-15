@@ -1,0 +1,25 @@
+Run the following query against central-db in your ACS installation:
+
+
+To report upon images themselves that exist in your clusters that are older than one year:
+-----------------------------------------------------------------------------------------------
+select id as Id, 
+name_fullname as ContainerName,
+metadata_v1_labels::json->'name' as BaseImageName, 
+(metadata_v1_labels::json->>'build-date')::TIMESTAMP as BuildDate,
+extract (day from now() - ((metadata_v1_labels::json->>'build-date')::TIMESTAMP)) as AgeInDays
+from images 
+where extract (day from now() - ((metadata_v1_labels::json->>'build-date')::TIMESTAMP)) > 365;
+
+
+To report upon deployments that use the images in your clusters that are older than one year:
+-----------------------------------------------------------------------------------------------
+select d.*
+from deployments d, deployments_containers dc
+where d.id = dc.deployments_id AND
+dc.image_id in
+(
+select id as Id 
+from images 
+where extract (day from now() - ((metadata_v1_labels::json->>'build-date')::TIMESTAMP)) > 365
+);
