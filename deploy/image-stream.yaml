@@ -1,0 +1,29 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  annotations:
+    openshift.io/image.dockerRepositoryCheck: '2023-05-15T18:07:58Z'
+  name: old-base-image
+  labels:
+    app: old-base-image
+    app.kubernetes.io/component: old-base-image
+    app.kubernetes.io/instance: old-base-image
+    app.kubernetes.io/name: old-base-image
+    app.kubernetes.io/part-of: old-base-image-app
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - name: '1'
+      annotations:
+        openshift.io/generated-by: OpenShiftWebConsole
+        openshift.io/imported-from: 'registry.home.glroland.com/glroland/old-base-image:1'
+      from:
+        kind: DockerImage
+        name: 'registry.home.glroland.com/glroland/old-base-image:1'
+      generation: 2
+      importPolicy:
+        insecure: true
+        importMode: Legacy
+      referencePolicy:
+        type: Local

@@ -1,0 +1,22 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: old-base-image
+  labels:
+    app: old-base-image
+    app.kubernetes.io/component: old-base-image
+    app.kubernetes.io/instance: old-base-image
+    app.kubernetes.io/name: old-base-image
+    app.kubernetes.io/part-of: old-base-image-app
+    app.openshift.io/runtime-version: '1'
+  annotations:
+    openshift.io/host.generated: 'true'
+spec:
+  host: old-base-image-scratchpad.apps.ocphub.home.glroland.com
+  to:
+    kind: Service
+    name: old-base-image
+    weight: 100
+  port:
+    targetPort: 8080-tcp
+  wildcardPolicy: None

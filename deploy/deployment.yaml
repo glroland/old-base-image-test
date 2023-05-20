@@ -1,0 +1,60 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  annotations:
+    alpha.image.policy.openshift.io/resolve-names: '*'
+    app.openshift.io/route-disabled: 'false'
+    deployment.kubernetes.io/revision: '5'
+    image.openshift.io/triggers: >-
+      [{"from":{"kind":"ImageStreamTag","name":"old-base-image:1","namespace":"scratchpad"},"fieldPath":"spec.template.spec.containers[?(@.name==\"old-base-image\")].image","pause":"false"}]
+    openshift.io/generated-by: OpenShiftWebConsole
+  name: old-base-image
+  labels:
+    app: old-base-image
+    app.kubernetes.io/component: old-base-image
+    app.kubernetes.io/instance: old-base-image
+    app.kubernetes.io/name: old-base-image
+    app.kubernetes.io/part-of: old-base-image-app
+    app.openshift.io/runtime-namespace: scratchpad
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: old-base-image
+  template:
+    metadata:
+      labels:
+        app: old-base-image
+        deployment: old-base-image
+      annotations:
+        openshift.io/generated-by: OpenShiftWebConsole
+    spec:
+      containers:
+        - name: old-base-image
+          image: >-
+            registry.home.glroland.com/glroland/old-base-image@sha256:6f263f69ada603c7a560b724f52720092e164de5e6ba6b94680545c6b2551719
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+            - containerPort: 8443
+              protocol: TCP
+            - containerPort: 8778
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      imagePullSecrets:
+        - name: glroland-ocp4-pull-secret
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

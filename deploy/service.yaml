@@ -1,0 +1,36 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: old-base-image
+  labels:
+    app: old-base-image
+    app.kubernetes.io/component: old-base-image
+    app.kubernetes.io/instance: old-base-image
+    app.kubernetes.io/name: old-base-image
+    app.kubernetes.io/part-of: old-base-image-app
+    app.openshift.io/runtime-version: '1'
+  annotations:
+    openshift.io/generated-by: OpenShiftWebConsole
+spec:
+  ipFamilies:
+    - IPv4
+  ports:
+    - name: 8080-tcp
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    - name: 8443-tcp
+      protocol: TCP
+      port: 8443
+      targetPort: 8443
+    - name: 8778-tcp
+      protocol: TCP
+      port: 8778
+      targetPort: 8778
+  internalTrafficPolicy: Cluster
+  type: ClusterIP
+  ipFamilyPolicy: SingleStack
+  sessionAffinity: None
+  selector:
+    app: old-base-image
+    deployment: old-base-image
